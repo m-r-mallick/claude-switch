@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# Claude Switch Installer
+# Usage: curl -fsSL <url> | bash
+#
+# Options:
+#   --local <file>  Install from local file instead of downloading
+
+set -e
+
+VERSION="1.0.0"
+BINARY_NAME="claude-switch"
+BINARY_PATH="/usr/local/bin/$BINARY_NAME"
+REPO_BASE_URL="https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/claude-switch"
+
+# Colors
+readonly NC='\033[0m'
+readonly GREEN='\033[0;32m'
+readonly BLUE='\033[0;34m'
+readonly YELLOW='\033[1;33m'
+readonly RED='\033[0;31m'
+readonly BOLD='\033[1m'
+readonly DIM='\033[2m'
+
+echo ""
+echo -e "  ${BOLD}${BLUE}Claude Switch${NC} v${VERSION}"
+echo -e "  ${DIM}Model Configuration Manager${NC}"
+echo ""
+
+# Parse arguments
+LOCAL_FILE=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --local)
+            LOCAL_FILE="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# Detect sudo
+if [[ -w "/usr/local/bin" ]]; then
+    sudo_cmd=""
+elif command -v sudo &>/dev/null; then
+    sudo_cmd="sudo"
+else
+    echo -e "  ${RED}✗ Cannot write to /usr/local/bin and sudo not available${NC}"
+    exit 1
+fi
+
+# Check jq dependency
+check_jq() {
+    if ! command -v jq &>/dev/null; then
+        echo -e "  ${YELLOW}⚠ jq not found. Install with: apt install jq (Debian) or brew install jq (macOS)${NC}"
+        return 1
+    fi
+    return 0
+}
+
+# Download main script
+download_script() {
+    if [[ -n "$LOCAL_FILE" ]]; then
+        if [[ ! -f "$LOCAL_FILE" ]]; then
+            echo -e "  ${RED}✗ File not found: $LOCAL_FILE${NC}"
+            exit 1
+        fi
+        cat "$LOCAL_FILE"
+    else
+        curl -fsSL "${REPO_BASE_URL}/claude-switch-tui.sh"
+    fi
+}
+
+# Install
+install_binary() {
+    local content
+    content=$(download_script)
+
+    echo -e "  ${DIM}Installing to $BINARY_PATH...${NC}"
+
+    $sudo_cmd mkdir -p "$(dirname "$BINARY_PATH")"
+    echo "#!/bin/bash
+# Claude Switch v${VERSION} - Installed $(date +%Y-%m-%d)
+$content" | $sudo_cmd tee "$BINARY_PATH" > /dev/null
+    $sudo_cmd chmod +x "$BINARY_PATH"
+}
+
+# Show completion
+show_completion() {
+    echo ""
+    echo -e "  ${GREEN}✓ Installed successfully!${NC}"
+    echo ""
+    echo -e "  ${BOLD}Usage:${NC}"
+    echo ""
+    echo -e "    ${BLUE}claude-switch${NC}          Launch interactive TUI"
+    echo -e "    ${BLUE}claude-switch list${NC}     List configurations"
+    echo -e "    ${BLUE}claude-switch switch mimax${NC}  Switch config"
+    echo -e "    ${BLUE}claude-switch current${NC}   Show current config"
+    echo -e "    ${BLUE}claude-switch uninstall${NC} Remove binary"
+    echo ""
+    echo -e "  ${DIM}For more info: claude-switch help${NC}"
+    echo ""
+}
+
+# Main
+check_jq
+install_binary
+show_completion
