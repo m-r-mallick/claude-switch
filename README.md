@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/demo.png" alt="TUI Demo" width="600">
+  <img src="https://raw.githubusercontent.com/m-r-mallick/claude-switch/main/demo.png" alt="TUI Demo" width="600">
 </p>
 
 ---
@@ -30,13 +30,13 @@
 ## 🚀 Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/claude-switch/install | bash
+curl -fsSL https://raw.githubusercontent.com/m-r-mallick/claude-switch/main/install | bash
 ```
 
 Or for offline install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/claude-switch/install | bash -s -- --local /path/to/claude-switch-tui.sh
+curl -fsSL https://raw.githubusercontent.com/m-r-mallick/claude-switch/main/install | bash -s -- --local /path/to/claude-switch-tui.sh
 ```
 
 ---

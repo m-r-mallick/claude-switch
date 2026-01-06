@@ -6,8 +6,8 @@
 set -e
 
 VERSION="1.1.0"
-INSTALL_URL="https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/claude-switch/install"
-REPO_URL="https://github.com/YOUR_USER/YOUR_REPO"
+INSTALL_URL="https://raw.githubusercontent.com/m-r-mallick/claude-switch/main/install"
+REPO_URL="https://github.com/m-r-mallick/claude-switch"
 
 # Default configs (used if no ~/.claudeswitchrc exists)
 declare -A DEFAULT_CONFIGS
